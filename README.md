@@ -1,12 +1,124 @@
-# React + Vite
+# Equipment Rental Management Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive React + Tailwind CSS dashboard for managing equipment inventory, rental orders, and maintenance records, with all data persisted in browser localStorage.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Demo
 
-## Expanding the ESLint configuration
+- **Live App:** [https://rental-app-eight-ebon.vercel.app/](https://rental-app-eight-ebon.vercel.app/)
+- **GitHub Repo:**  https://github.com/vikas3303/rental-app#
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+
+- **components/**: Reusable UI components (forms, lists, cards, charts, calendar, notifications).
+- **contexts/**: React Context providers for global state and localStorage sync.
+- **pages/**: Route-level components for each main view.
+- **utils/**: Utility functions for localStorage, roles, etc.
+- **styles/**: Tailwind CSS and custom styles.
+
+---
+
+## ✨ Features
+
+- **User Authentication (Simulated):**
+  - Hardcoded users (Admin, Staff, Customer).
+  - Role-based access control.
+  - Session persistence with localStorage.
+
+- **Equipment Management:**
+  - Add, edit, delete, and view equipment.
+  - Equipment detail page with rental and maintenance history.
+
+- **Rental Orders:**
+  - Create, edit, delete rental orders.
+  - Filter by status, customer, or equipment.
+  - Calendar view for scheduled rentals.
+
+- **Maintenance Records:**
+  - Add, edit, delete, and view maintenance records per equipment.
+
+- **Dashboard:**
+  - KPI cards: Total Equipment, Available vs Rented, Overdue Rentals, Upcoming Maintenance.
+  - Visual charts (doughnut/bar) for quick insights.
+
+- **Notification Center:**
+  - In-app, dismissible notifications for key events.
+
+- **Responsive Design:**
+  - Fully responsive for mobile, tablet, and desktop.
+
+- **LocalStorage Persistence:**
+  - All data is stored in browser localStorage. No backend or external APIs.
+
+---
+
+## 🛠️ Technical Decisions
+
+- **Frontend Only:** No backend; all data is simulated and persisted using localStorage for easy demo and testing.
+- **React Context API:** Used for global state management and to avoid prop drilling.
+- **Tailwind CSS:** For rapid, consistent, and responsive UI styling.
+- **Chart.js (via react-chartjs-2):** For data visualization in dashboard KPIs.
+- **Role-based Access:** Only Admin and Staff can access management and analytics features; Customers have limited access.
+- **Clean Architecture:** Components are modular, with separation of concerns between UI, business logic, and state.
+
+---
+
+## ⚠️ Known Issues / Limitations
+
+- **No real authentication:** User login is simulated with hardcoded credentials.
+- **No backend:** All data is local to the browser; clearing browser data will erase all records.
+- **No multi-user support:** Each browser session is isolated.
+- **No server-side validation:** All validation is client-side.
+- **No email notifications:** All notifications are in-app only.
+
+---
+
+## 👤 Sample Users
+
+| Role     | Email               | Password   |
+|----------|---------------------|------------|
+| Admin    | admin@entnt.in      | admin123   |
+| Staff    | staff@entnt.in      | staff123   |
+| Customer | customer@entnt.in   | cust123    |
+
+---
+
+## 📚 Architechture Overview
+src/
+├── components/
+│   ├── Authentication/          # Login, Signup, Auth forms
+│   ├── Dashboard/               # KPI cards, charts, etc.
+│   ├── Equipment/               # Equipment list, detail, forms
+│   ├── Rentals/                 # Rental order components
+│   ├── Maintenance/            # Maintenance records UI
+│   ├── Notifications/          # Toasts, alert boxes, etc.
+│
+├── contexts/
+│   ├── AuthContext.jsx          # Authentication & role context
+│   ├── EquipmentContext.jsx     # Equipment state & CRUD logic
+│   ├── RentalsContext.jsx       # Rentals state management
+│   ├── MaintenanceContext.jsx   # Maintenance state management
+│   ├── NotificationContext.jsx  # Notification handling
+│  
+│
+├── pages/
+│   ├── AllEquipment.jsx         # All equipment listing page
+│   ├── DashboardPage.jsx        # Admin/staff dashboard
+│   ├── EquipmentPage.jsx        # Single equipment detail page
+│   ├── RentalsPage.jsx          # Rentals listing and management
+│   ├── MaintenancePage.jsx      # Maintenance records
+│
+├── utils/
+│   ├── localStorageUtils.js     # Wrapper functions for localStorage
+│   └── roleUtils.js             # Role-based access helpers
+│
+├── styles/
+│   └── main.css                 # Tailwind imports & custom styles
+│
+├── App.jsx                      # Main app and routing logic
+└── index.js                     # Entry point, renders <App />
+
+
+-
