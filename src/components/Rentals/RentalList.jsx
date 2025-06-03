@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { useRentals } from '../../contexts/RentalsContext';
 import { useEquipment } from '../../contexts/EquipmentContext';
 
 function RentalList() {
-  const { rentals, updateRental, deleteRental } = useRentals();
+  // FIXED: Changed updateRental to updateRentalStatus to match context
+  const { rentals, updateRentalStatus, deleteRental } = useRentals();
   const { equipment } = useEquipment();
   
   // Filter states
@@ -12,18 +12,21 @@ function RentalList() {
   const [customerFilter, setCustomerFilter] = useState('');
   const [equipmentFilter, setEquipmentFilter] = useState('');
 
-  // Filter rentals based on selected filters
+  // FIXED: Updated filter logic to handle both customerId and customerName
   const filteredRentals = rentals.filter(rental => {
     return (
       (!statusFilter || rental.status === statusFilter) &&
-      (!customerFilter || rental.customerId.toLowerCase().includes(customerFilter.toLowerCase())) &&
+      (!customerFilter || 
+        (rental.customerName && rental.customerName.toLowerCase().includes(customerFilter.toLowerCase())) ||
+        (rental.customerId && rental.customerId.toLowerCase().includes(customerFilter.toLowerCase()))
+      ) &&
       (!equipmentFilter || rental.equipmentId.toLowerCase().includes(equipmentFilter.toLowerCase()))
     );
   });
 
-  // Handle status update
+  // FIXED: Updated function name to match context
   const handleStatusUpdate = (rentalId, newStatus) => {
-    updateRental(rentalId, { status: newStatus });
+    updateRentalStatus(rentalId, newStatus);
   };
 
   // Get equipment name by ID
@@ -45,7 +48,7 @@ function RentalList() {
             <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="">All Statuses</option>
               <option value="Reserved">Reserved</option>
-              <option value="Ongoing">Ongoing</option>
+              <option value="Active">Active</option> {/* FIXED: Changed from "Ongoing" to "Active" */}
               <option value="Completed">Completed</option>
               <option value="Cancelled">Cancelled</option>
             </select>
@@ -94,9 +97,10 @@ function RentalList() {
               <tr style={{ backgroundColor: '#f8f9fa' }}>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Rental ID</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Equipment</th>
-                <th style={{ padding: '10px', border: '1px solid #ddd' }}>Customer ID</th>
+                <th style={{ padding: '10px', border: '1px solid #ddd' }}>Customer</th> {/* FIXED: Changed header */}
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Start Date</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>End Date</th>
+                <th style={{ padding: '10px', border: '1px solid #ddd' }}>Total Cost</th> {/* ADDED: Cost column */}
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Status</th>
                 <th style={{ padding: '10px', border: '1px solid #ddd' }}>Actions</th>
               </tr>
@@ -108,9 +112,16 @@ function RentalList() {
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
                     {getEquipmentName(rental.equipmentId)}
                   </td>
-                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>{rental.customerId}</td>
+                  {/* FIXED: Display customerName instead of customerId */}
+                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                    {rental.customerName || rental.customerId || 'N/A'}
+                  </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>{rental.startDate}</td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>{rental.endDate}</td>
+                  {/* ADDED: Total cost display */}
+                  <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                    ${rental.totalCost || 0}
+                  </td>
                   <td style={{ padding: '10px', border: '1px solid #ddd' }}>
                     <select 
                       value={rental.status} 
@@ -118,14 +129,14 @@ function RentalList() {
                       style={{ 
                         padding: '5px',
                         backgroundColor: rental.status === 'Reserved' ? '#fff3cd' :
-                                        rental.status === 'Ongoing' ? '#d1ecf1' :
+                                        rental.status === 'Active' ? '#d1ecf1' :
                                         rental.status === 'Completed' ? '#d4edda' : '#f8d7da',
                         border: '1px solid #ccc',
                         borderRadius: '3px'
                       }}
                     >
                       <option value="Reserved">Reserved</option>
-                      <option value="Ongoing">Ongoing</option>
+                      <option value="Active">Active</option> {/* FIXED: Changed from "Ongoing" to "Active" */}
                       <option value="Completed">Completed</option>
                       <option value="Cancelled">Cancelled</option>
                     </select>
@@ -160,49 +171,3 @@ function RentalList() {
 }
 
 export default RentalList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // src/components/Rentals/RentalList.jsx
-// import { useRentals } from '../../contexts/RentalsContext';
-
-// function RentalList() {
-//   const { rentals } = useRentals();
-
-//   return (
-//     <div>
-//       <h3>Rental List</h3>
-//       <ul>
-//         {rentals.map((rental) => (
-//           <li key={rental.id}>
-//             <strong>Rental ID:</strong> {rental.id} | Equipment: {rental.equipmentId} | Customer: {rental.customerId} |
-//             Status: {rental.status} | From: {rental.startDate} To: {rental.endDate}
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default RentalList;

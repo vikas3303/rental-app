@@ -7,64 +7,11 @@ import {
   Eye,
   Filter,
 } from "lucide-react";
+// ADDED: Import the actual context
+import { useRentals } from "../../contexts/RentalsContext";
+import { useEquipment } from "../../contexts/EquipmentContext";
 
-// Mock data for demonstration
-const mockRentals = [
-  {
-    id: "r1",
-    equipmentId: "eq2",
-    equipmentName: "Bulldozer D6",
-    customerId: "3",
-    customerName: "Elite Contractors",
-    startDate: "2025-06-01",
-    endDate: "2025-06-05",
-    status: "Reserved",
-    totalCost: 500,
-    color: "#3B82F6", // Blue
-  },
-  {
-    id: "r2",
-    equipmentId: "eq1",
-    equipmentName: "Excavator CAT 320",
-    customerId: "1",
-    customerName: "ABC Construction",
-    startDate: "2025-06-03",
-    endDate: "2025-06-10",
-    status: "Active",
-    totalCost: 1200,
-    color: "#10B981", // Green
-  },
-  {
-    id: "r3",
-    equipmentId: "eq3",
-    equipmentName: "Crane 50T",
-    customerId: "2",
-    customerName: "XYZ Builders",
-    startDate: "2025-05-28",
-    endDate: "2025-06-01",
-    status: "Completed",
-    totalCost: 800,
-    color: "#6B7280", // Gray
-  },
-  {
-    id: "r4",
-    equipmentId: "eq1",
-    equipmentName: "Excavator CAT 320",
-    customerId: "3",
-    customerName: "Elite Contractors",
-    startDate: "2025-06-15",
-    endDate: "2025-06-20",
-    status: "Reserved",
-    totalCost: 900,
-    color: "#F59E0B", // Yellow
-  },
-];
-
-const mockEquipment = [
-  { id: "eq1", name: "Excavator CAT 320" },
-  { id: "eq2", name: "Bulldozer D6" },
-  { id: "eq3", name: "Crane 50T" },
-];
+// REMOVED: Mock data - now using real data from context
 
 // Enhanced Rental Calendar Component
 const RentalCalendar = () => {
@@ -73,8 +20,9 @@ const RentalCalendar = () => {
   const [viewType, setViewType] = useState("month"); // 'month' or 'week'
   const [equipmentFilter, setEquipmentFilter] = useState("");
 
-  // Use mock data for demo - replace with: const { rentals } = useRentals();
-  const rentals = mockRentals;
+  // CHANGED: Use real context data instead of mock data
+  const { rentals } = useRentals();
+  const { equipment } = useEquipment();
 
   // Filter rentals based on equipment selection
   const filteredRentals = useMemo(() => {
@@ -92,6 +40,12 @@ const RentalCalendar = () => {
       const checkDate = new Date(dateStr);
       return checkDate >= startDate && checkDate <= endDate;
     });
+  };
+
+  // ADDED: Get equipment name by ID
+  const getEquipmentName = (equipmentId) => {
+    const eq = equipment.find(e => e.id === equipmentId);
+    return eq ? eq.name : equipmentId;
   };
 
   // Generate calendar days for current month
@@ -186,7 +140,8 @@ const RentalCalendar = () => {
               className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             >
               <option value="">All Equipment</option>
-              {mockEquipment.map((eq) => (
+              {/* CHANGED: Use real equipment data */}
+              {equipment.map((eq) => (
                 <option key={eq.id} value={eq.id}>
                   {eq.name}
                 </option>
@@ -286,9 +241,10 @@ const RentalCalendar = () => {
                           className={`text-xs p-1 rounded cursor-pointer text-white truncate ${getStatusColor(
                             rental.status
                           )}`}
-                          title={`${rental.equipmentName} - ${rental.customerName}`}
+                          title={`${getEquipmentName(rental.equipmentId)} - ${rental.customerName || rental.customerId}`}
                         >
-                          {rental.equipmentName}
+                          {/* CHANGED: Use getEquipmentName function */}
+                          {getEquipmentName(rental.equipmentId)}
                         </div>
                       ))}
 
@@ -345,12 +301,14 @@ const RentalCalendar = () => {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="font-medium">Equipment:</span>
-                  <span>{selectedRental.equipmentName}</span>
+                  {/* CHANGED: Use getEquipmentName function */}
+                  <span>{getEquipmentName(selectedRental.equipmentId)}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className="font-medium">Customer:</span>
-                  <span>{selectedRental.customerName}</span>
+                  {/* CHANGED: Use customerName or customerId */}
+                  <span>{selectedRental.customerName || selectedRental.customerId}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -374,7 +332,7 @@ const RentalCalendar = () => {
 
                 <div className="flex justify-between">
                   <span className="font-medium">Total Cost:</span>
-                  <span className="font-bold">${selectedRental.totalCost}</span>
+                  <span className="font-bold">${selectedRental.totalCost || 0}</span>
                 </div>
               </div>
 
@@ -423,7 +381,7 @@ const RentalCalendar = () => {
         </div>
         <div className="text-center">
           <div className="text-2xl font-bold text-purple-600">
-            ${filteredRentals.reduce((sum, r) => sum + r.totalCost, 0)}
+            ${filteredRentals.reduce((sum, r) => sum + (r.totalCost || 0), 0)}
           </div>
           <div className="text-sm text-gray-600">Total Revenue</div>
         </div>
