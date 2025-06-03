@@ -85,39 +85,5 @@ A responsive React + Tailwind CSS dashboard for managing equipment inventory, re
 
 ---
 
-## 📚 Architechture Overview
-src/
-├── components/
-│   ├── Authentication/          # Login, Signup, Auth forms
-│   ├── Dashboard/               # KPI cards, charts, etc.
-│   ├── Equipment/               # Equipment list, detail, forms
-│   ├── Rentals/                 # Rental order components
-│   ├── Maintenance/            # Maintenance records UI
-│   ├── Notifications/          # Toasts, alert boxes, etc.
-│
-├── contexts/
-│   ├── AuthContext.jsx          # Authentication & role context
-│   ├── EquipmentContext.jsx     # Equipment state & CRUD logic
-│   ├── RentalsContext.jsx       # Rentals state management
-│   ├── MaintenanceContext.jsx   # Maintenance state management
-│   ├── NotificationContext.jsx  # Notification handling
-│
-├── pages/
-│   ├── AllEquipment.jsx         # All equipment listing page
-│   ├── DashboardPage.jsx        # Admin/staff dashboard
-│   ├── EquipmentPage.jsx        # Single equipment detail page
-│   ├── RentalsPage.jsx          # Rentals listing and management
-│   ├── MaintenancePage.jsx      # Maintenance records
-│
-├── utils/
-│   ├── localStorageUtils.js     # Wrapper functions for localStorage
-│   └── roleUtils.js             # Role-based access helpers
-│
-├── styles/
-│   └── main.css                 # Tailwind imports & custom styles
-│
-├── App.jsx                      # Main app and routing logic
-└── index.js                     # Entry point, renders <App />
-
 
 -
