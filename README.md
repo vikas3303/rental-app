@@ -101,7 +101,6 @@ src/
 │   ├── RentalsContext.jsx       # Rentals state management
 │   ├── MaintenanceContext.jsx   # Maintenance state management
 │   ├── NotificationContext.jsx  # Notification handling
-│  
 │
 ├── pages/
 │   ├── AllEquipment.jsx         # All equipment listing page
